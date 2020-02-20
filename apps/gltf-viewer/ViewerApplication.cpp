@@ -199,10 +199,8 @@ int ViewerApplication::run()
     return -1;
   }
 
-  // TODO Creation of Buffer Objects
   const auto bufferObjects = createBufferObjects(model);
 
-  // TODO Creation of Vertex Array Objects
   std::vector<VaoRange> meshToVertexArrays;
   const auto vertexArrayObjects = createVertexArrayObjects(model, bufferObjects, meshToVertexArrays);
 
@@ -226,7 +224,9 @@ int ViewerApplication::run()
 
     // Draw the scene referenced by gltf file
     if (model.defaultScene >= 0) {
-      // TODO Draw all nodes
+      for(const auto nodeId : model.scenes[model.defaultScene].nodes){
+        drawNode(nodeId, glm::mat4(1));
+      }
     }
   };
 
