@@ -11,7 +11,7 @@
 #include "utils/cameras.hpp"
 
 #include <stb_image_write.h>
-#include <tiny_gltf.h>
+//#include <tiny_gltf.h>
 
 void keyCallback(
     GLFWwindow *window, int key, int scancode, int action, int mods)
@@ -19,6 +19,23 @@ void keyCallback(
   if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
     glfwSetWindowShouldClose(window, 1);
   }
+}
+
+bool ViewerApplication::loadGltfFile(tinygltf::Model & model){
+  tinygltf::TinyGLTF loader;
+  std::string err, warn;
+  bool b = loader.LoadASCIIFromFile(&model, &err, &warn, m_gltfFilePath.string());
+  if (!warn.empty()) {
+    printf("Warn: %s\n", warn.c_str());
+  }
+
+  if (!err.empty()) {
+    printf("Err: %s\n", err.c_str());
+  }
+  if (!b) {
+    std::cerr << "Failed to parse glTF file" << std::endl;
+  }
+  return b;
 }
 
 int ViewerApplication::run()
@@ -55,7 +72,9 @@ int ViewerApplication::run()
   }
 
   tinygltf::Model model;
-  // TODO Loading the glTF file
+  if(!loadGltfFile(model)){
+    return -1;
+  }
 
   // TODO Creation of Buffer Objects
 
